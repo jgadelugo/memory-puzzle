@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
@@ -15,7 +16,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,17 +35,35 @@ public class MemoryPuzzleApp extends Application {
     //limiting clicks
     private int clickCount = 2;
 
-    private Parent createContent() {
+    public BufferedImage[] images() throws IOException {
+        // Images are located in the geek folder
+        // which is located in the images folder
+        // which is located in the current directory.
+        String prefix = "C:\\Users\\josep\\Desktop\\Java\\mp\\images\\";
+        String[] ids = { "cat", "Dog", "eagle", "Elephant", "Fish", "Horse","Rabbit", "Tiger"};
+        String ext = ".jpeg";
+        BufferedImage[] images = new BufferedImage[ids.length];
+        for(int i = 0; i < images.length; i++) {
+            String path = prefix + ids[i] + ext;
+            System.out.println(path);
+            images[i] = ImageIO.read(new File(path));
+        }
+        return images;
+    }
+    private Parent createContent() throws IOException{
         Pane root = new Pane();
         root.setPrefSize(600,600);
 
-        //Creates tiles for board
-        char c = 'A';
+        List<String> imageList = new ArrayList<String>();
+
+        //Creates tiles for board using images
+        BufferedImage[] c = images();
+
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < NUM_OF_PAIRS; i++) {
-            tiles.add(new Tile(String.valueOf(c)));
-            tiles.add(new Tile(String.valueOf(c)));
-            c++;
+            tiles.add(new Tile(String.valueOf(c[i])));
+            tiles.add(new Tile(String.valueOf(c[i])));
+            ;
         }
         // shuffles tiles so they are not in order
         Collections.shuffle(tiles);
